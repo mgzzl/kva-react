@@ -2,6 +2,11 @@
   "name": "kva-react",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgzzl/kva-react.git"
+  },
+  "homepage": "http://keingarten/kva",
   "dependencies": {
     "@pdfme/common": "^4.0.2",
     "@pdfme/generator": "^4.0.2",

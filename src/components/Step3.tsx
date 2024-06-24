@@ -79,7 +79,7 @@ interface Step3Props {
 }
 
 const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
-    const [items, setItems] = useState<Item[]>(values || [{ id: 1, position: 'Bitte wählen', subItems: [] }]);
+    const [items, setItems] = useState<Item[]>(values || [{ id: 1, position: 'Bitte wählen', subItems: []}]);
     const [subTotal, setSubTotal] = useState(0);
 
     useEffect(() => {
@@ -88,7 +88,7 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
     }, [items]);
 
     const handleAddItem = () => {
-        setItems([...items, { id: items.length + 1, position: 'Bitte wählen', subItems: [] }]);
+        setItems([...items, { id: items.length + 1, position: 'Bitte wählen', subItems: []}]);
       };
 
     const handleDeleteLastItem = () => {
@@ -141,11 +141,12 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
         }
         setItems(newItems);
         updateSubTotal(newItems);
-    };    
+    };
+    
 
     const updateSubTotal = (items: Item[]) => {
-        const total = items.reduce((acc, item) => acc + item.subItems.reduce((subAcc, subItem) => subAcc + subItem.total, 0), 0);
-        setSubTotal(total);
+        const subtotal = items.reduce((acc, item) => acc + item.subItems.reduce((subAcc, subItem) => subAcc + subItem.total, 0), 0);
+        setSubTotal(subtotal);
     };
 
     const tax = subTotal * 0.19;

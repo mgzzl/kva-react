@@ -15,6 +15,8 @@ interface FormData {
         zip: string;
         city: string;
         country: string;
+        reverseCharge: boolean;
+        english: boolean;
     };
     keingarten: {
         contactPerson: string;
@@ -24,66 +26,93 @@ interface FormData {
         zip: string;
         city: string;
         country: string;
+        invoiceNr: number;
     };
 }
 
 interface Step1Props {
     values: FormData;
     onChange: (value: FormData) => void;
-  }
+}
 
 const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
     const [formData, setFormData] = useState<FormData>(
         values || {
-          customer: {
-            name: '',
-            street: '',
-            streetNumber: '',
-            zip: '',
-            city: '',
-            country: ''
-          },
-          keingarten: {
-            contactPerson: '',
-            date: new Date().toISOString().split('T')[0],
-            // date: new Date().toLocaleDateString('de'),
-            street: 'Schreyerstraße',
-            streetNumber: '21',
-            zip: '90443',
-            city: 'Nürnberg',
-            country: 'Deutschland'
-          }
+            customer: {
+                name: '',
+                street: '',
+                streetNumber: '',
+                zip: '',
+                city: '',
+                country: '',
+                reverseCharge: false,
+                english: false
+            },
+            keingarten: {
+                contactPerson: '',
+                date: new Date().toISOString().split('T')[0],
+                // date: new Date().toLocaleDateString('de'),
+                street: 'Schreyerstraße',
+                streetNumber: '21',
+                zip: '90443',
+                city: 'Nürnberg',
+                country: 'Deutschland',
+                invoiceNr: ''
+            }
         }
     );
 
     useEffect(() => {
         onChange(formData);
-      }, [formData]);
+    }, [formData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        if (name.startsWith('customer.')) {
-            const field = name.split('.')[1];
-            setFormData(prevState => ({
-                ...prevState,
-                customer: {
-                    ...prevState.customer,
-                    [field]: value
-                }
-            }));
-        } else if (name.startsWith('keingarten.')) {
-            console.log(name)
-            const field = name.split('.')[1];
-            console.log("Edit field", field)
-            setFormData(prevState => ({
-                ...prevState,
-                keingarten: {
-                    ...prevState.keingarten,
-                    [field]: value
-                }
-            }));
+        const { name, type, value } = e.target;
+        
+        if (type === 'checkbox') {
+            const { checked } = e.target as HTMLInputElement;
+            if (name.startsWith('customer.')) {
+                const field = name.split('.')[1];
+                setFormData(prevState => ({
+                    ...prevState,
+                    customer: {
+                        ...prevState.customer,
+                        [field]: checked
+                    }
+                }));
+            } else if (name.startsWith('keingarten.')) {
+                const field = name.split('.')[1];
+                setFormData(prevState => ({
+                    ...prevState,
+                    keingarten: {
+                        ...prevState.keingarten,
+                        [field]: checked
+                    }
+                }));
+            }
+        } else {
+            if (name.startsWith('customer.')) {
+                const field = name.split('.')[1];
+                setFormData(prevState => ({
+                    ...prevState,
+                    customer: {
+                        ...prevState.customer,
+                        [field]: value
+                    }
+                }));
+            } else if (name.startsWith('keingarten.')) {
+                const field = name.split('.')[1];
+                setFormData(prevState => ({
+                    ...prevState,
+                    keingarten: {
+                        ...prevState.keingarten,
+                        [field]: value
+                    }
+                }));
+            }
         }
     };
+    
 
     // const handleSubmit = async (e: React.FormEvent) => {
     //     e.preventDefault();
@@ -99,15 +128,15 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <h4 className="mb-3">Kunde</h4>
                             <label className="form-label">
                                 Firmenname:</label>
-                                <input 
-                                    type="text" 
-                                    value={formData.customer.name} 
-                                    className="form-control" 
-                                    placeholder="Musterfirma GmbH" 
-                                    name="customer.name" 
-                                    onChange={handleChange} 
-                                    required 
-                                />
+                            <input
+                                type="text"
+                                value={formData.customer.name}
+                                className="form-control"
+                                placeholder="Musterfirma GmbH"
+                                name="customer.name"
+                                onChange={handleChange}
+                                required
+                            />
 
                             <div className="invalid-feedback">
                                 Bitte geben Sie den Firmennamen ein.
@@ -119,15 +148,15 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 <div className="col">
                                     <label className="form-label">
                                         Straße:</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            placeholder="Musterstraße" 
-                                            name="customer.street" 
-                                            value={formData.customer.street}
-                                            onChange={handleChange} 
-                                            required 
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Musterstraße"
+                                        name="customer.street"
+                                        value={formData.customer.street}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                     <div className="invalid-feedback">
                                         Bitte geben Sie die Straße ein.
                                     </div>
@@ -135,15 +164,15 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 <div className="col-3">
                                     <label className="form-label">
                                         Hausnummer:</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            placeholder="42" 
-                                            name="customer.streetNumber" 
-                                            value={formData.customer.streetNumber}
-                                            onChange={handleChange} 
-                                            required 
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="42"
+                                        name="customer.streetNumber"
+                                        value={formData.customer.streetNumber}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                     <div className="invalid-feedback">
                                         Bitte geben Sie die Hausnummer ein.
                                     </div>
@@ -153,15 +182,15 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 <div className="col-3">
                                     <label className="form-label mt-3">
                                         PLZ:</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            placeholder="90420" 
-                                            name="customer.zip" 
-                                            value={formData.customer.zip}
-                                            onChange={handleChange} 
-                                            required 
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="90420"
+                                        name="customer.zip"
+                                        value={formData.customer.zip}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                     <div className="invalid-feedback">
                                         Bitte geben Sie die Postleitzahl ein.
                                     </div>
@@ -169,15 +198,15 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 <div className="col">
                                     <label className="form-label mt-3">
                                         Ort:</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            placeholder="Musterstadt" 
-                                            name="customer.city" 
-                                            value={formData.customer.city}
-                                            onChange={handleChange} 
-                                            required 
-                                        />
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Musterstadt"
+                                        name="customer.city"
+                                        value={formData.customer.city}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                     <div className="invalid-feedback">
                                         Bitte geben Sie den Ort ein.
                                     </div>
@@ -185,18 +214,50 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             </div>
                             <label className="form-label mt-3">
                                 Land:</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    placeholder="Musterland" 
-                                    name="customer.country" 
-                                    value={formData.customer.country}
-                                    onChange={handleChange} 
-                                    required 
-                                />
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Musterland"
+                                name="customer.country"
+                                value={formData.customer.country}
+                                onChange={handleChange}
+                                required
+                            />
                             <div className="invalid-feedback">
                                 Bitte geben Sie das Land ein.
                             </div>
+                            <div className="form-check mt-3">
+                                <label className="form-check-label">Reverse-Charge</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="customer.reverseCharge"
+                                    checked={formData.customer.reverseCharge}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="form-check mt-3">
+                                <label className="form-check-label">Englisch</label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="customer.english"
+                                    checked={formData.customer.english}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {/* <div className="d-flex align-items-center">
+                            </div>
+                                <label className="form-label mt-3">
+                                Reverse Charge:</label>
+                                <input 
+                                    type="checkbox" 
+                                    className="form-check-input" 
+                                    name="customer.reverseCharge" 
+                                    checked={formData.customer.reverseCharge}
+                                    onChange={handleChange}  
+                                />
+                                    reverse charge */}
                         </div>
                     </div>
                     <div className="vr"></div>
@@ -204,13 +265,13 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                         <h4 className="mb-3">Intern</h4>
                         <div className="row mb-3">
                             <div className="col">
-                            <label className="form-label">
-                                Kontaktperson:</label>
-                                <select 
-                                    className="form-select" 
-                                    name="keingarten.contactPerson" 
+                                <label className="form-label">
+                                    Kontaktperson:</label>
+                                <select
+                                    className="form-select"
+                                    name="keingarten.contactPerson"
                                     value={formData.keingarten.contactPerson}
-                                    onChange={handleChange} 
+                                    onChange={handleChange}
                                     required
                                 >
                                     <option value="">Bitte wählen</option>
@@ -227,14 +288,14 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <div className="col">
                                 <label className="form-label">
                                     Datum:</label>
-                                    <input 
-                                        type="date" 
-                                        className="form-control" 
-                                        name="keingarten.date" 
-                                        value={formData.keingarten.date} 
-                                        onChange={handleChange} 
-                                        required 
-                                    />
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    name="keingarten.date"
+                                    value={formData.keingarten.date}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <div className="invalid-feedback">
                                     Bitte wählen Sie ein Datum.
                                 </div>
@@ -245,14 +306,14 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <div className="col">
                                 <label className="form-label">
                                     Straße:</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        name="keingarten.street" 
-                                        value={formData.keingarten.street}
-                                        onChange={handleChange} 
-                                        required 
-                                    />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="keingarten.street"
+                                    value={formData.keingarten.street}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <div className="invalid-feedback">
                                     Bitte geben Sie die Straße ein.
                                 </div>
@@ -260,14 +321,14 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <div className="col-3">
                                 <label className="form-label">
                                     Hausnummer:</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        name="keingarten.streetNumber" 
-                                        value={formData.keingarten.streetNumber}
-                                        onChange={handleChange} 
-                                        required 
-                                    />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="keingarten.streetNumber"
+                                    value={formData.keingarten.streetNumber}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <div className="invalid-feedback">
                                     Bitte geben Sie die Hausnummer ein.
                                 </div>
@@ -277,14 +338,14 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <div className="col-3">
                                 <label className="form-label mt-3">
                                     PLZ:</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        name="keingarten.zip" 
-                                        value={formData.keingarten.zip}
-                                        onChange={handleChange} 
-                                        required 
-                                    />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="keingarten.zip"
+                                    value={formData.keingarten.zip}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <div className="invalid-feedback">
                                     Bitte geben Sie die Postleitzahl ein.
                                 </div>
@@ -292,14 +353,14 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             <div className="col">
                                 <label className="form-label mt-3">
                                     Ort:</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        name="keingarten.city" 
-                                        value={formData.keingarten.city}
-                                        onChange={handleChange} 
-                                        required 
-                                    />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="keingarten.city"
+                                    value={formData.keingarten.city}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <div className="invalid-feedback">
                                     Bitte geben Sie den Ort ein.
                                 </div>
@@ -308,18 +369,29 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                         <div className="mb-3">
                             <label className="form-label mt-3">
                                 Land:</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    name="keingarten.country" 
-                                    value={formData.keingarten.country}
-                                    onChange={handleChange} 
-                                    required 
-                                />
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="keingarten.country"
+                                value={formData.keingarten.country}
+                                onChange={handleChange}
+                                required
+                            />
                             <div className="invalid-feedback">
                                 Bitte geben Sie das Land ein.
                             </div>
                         </div>
+                        <h6 className="mb-3">Rechnung?</h6>
+                        <label className="form-label">
+                        Rechnungsnummer:</label>
+                        <input 
+                            type="number" 
+                            className="form-control" 
+                            name="keingarten.invoiceNr"
+                            placeholder='123'
+                            value={formData.keingarten.invoiceNr} 
+                            onChange={handleChange}
+                        />
                     </div>
                 </div>
                 {/* <button className="btn btn-success" onClick={handleSubmit}>

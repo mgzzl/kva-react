@@ -1,9 +1,11 @@
+// src/Quotation.tsx
 import React, { Fragment } from 'react';
-import ReactPDF, { Document, Page, Text, View, StyleSheet, Font, Image, Line, Svg, Link } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image, Line, Svg, Link } from '@react-pdf/renderer';
 import logo from '../kg_logo_black_192px.png'
 import signature from '../kg_signe.png'
 import OpenSansRegular from '../assets/fonts/OpenSans-Regular.ttf'
 import OpenSansBold from '../assets/fonts/OpenSans-Bold.ttf'
+import Acumin from '../assets/fonts/Acumin_Variable_Concept.ttf'
 
 
 // Register fonts
@@ -15,19 +17,23 @@ Font.register({
   ],
 });
 
+// Register fonts
+// Font.register({
+//   family: 'Acumin',
+//   fonts: [
+//     { src: Acumin, fontWeight: 'normal' },
+//     { src: Acumin, fontWeight: 'bold' },
+//   ],
+// });
+
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'OpenSans',
     fontSize: 10,
-    // paddingVertical: '13mm',
-    paddingTop: '13mm',
-    paddingBottom: '40mm',
+    paddingVertical: '13mm',
     paddingHorizontal: '15.5mm',
-    // paddingLeft: '15.5mm',
-    // paddingRight: '15.5mm',
     lineHeight: 1.25,
-    flexDirection: 'column',
-    position: 'relative', // To position the footer absolutely
+    flexDirection: 'column'
   },
   label: {
     display: 'flex',
@@ -90,10 +96,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  right: {
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  },
   rightAligned: {
     flexDirection: 'row-reverse',
   },
@@ -115,25 +117,11 @@ const styles = StyleSheet.create({
   },
   value: {
     width: '70%'
-  },
-  footer: {
-    color: 'grey',
-    fontSize: 9,
-    // flex: 1, 
-    flexDirection: 'row', 
-    alignItems: 'flex-start', 
-    justifyContent: 'space-between'
-  },
-  footerPosition: {
-    position: 'absolute',
-    bottom: '14mm', // Position the footer above the page number
-    left: '15.5mm', // Match the horizontal padding of the page
-    right: '15.5mm', // Match the horizontal padding of the page
   }
 
 });
 
-interface InvoiceProps {
+interface QuotationProps {
   data: {
     customer: {
       name: string;
@@ -153,7 +141,6 @@ interface InvoiceProps {
       zip: string;
       city: string;
       country: string;
-      invoiceNr: number;
     };
     project: {
       titel: string;
@@ -183,7 +170,7 @@ interface InvoiceProps {
   taxRate: number;
 }
 
-const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
+const Quotation: React.FC<QuotationProps> = ({ data, taxRate }) => {
   const { customer, keingarten, project, items } = data;
 
   const filteredItems = items.flatMap(item =>
@@ -218,31 +205,19 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
     <View style={styles.container}>
       <View style={[styles.label, styles.address]}>
         <View>
-          <Text style={styles.categoryTitle}>Rechnung Nr. {keingarten.invoiceNr}</Text>
+          <Text style={styles.categoryTitle}>Kostenvoranschlag</Text>
           <Text>"{project.titel}"</Text>
         </View>
         <View>
           <Text style={styles.categoryTitle}>Kontaktperson</Text>
           <Text>{keingarten.contactPerson}</Text>
         </View>
-        <View style={styles.right}>
+        <View>
           <Text style={styles.categoryTitle}>{new Intl.DateTimeFormat('de-DE', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
           }).format(new Date(keingarten.date))}</Text>
-          <View style={styles.right}>
-            <Text style={styles.categoryTitle}>Leistungszeitraum</Text>
-            <Text style={styles.text}>{new Intl.DateTimeFormat('de-DE', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            }).format(new Date(keingarten.date))} - {new Intl.DateTimeFormat('de-DE', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            }).format(new Date(keingarten.date))}</Text>
-          </View>
         </View>
       </View>
     </View>
@@ -277,39 +252,128 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
     </View>
   );
 
-  const Footer = () => (
-      <View style={[styles.address, styles.container, styles.footer]}>
-        <View>
-          <Text style={styles.categoryTitle}>keingarten</Text>
-          <Text>Bissantz, Lörinc, Lorenz, Brozmann GbR</Text>
-          <Text>{keingarten.street} {keingarten.streetNumber}</Text>
-          <Text>{keingarten.zip} {keingarten.city}</Text>
-          <Text>Mail: hello@keingarten.de</Text>
-        </View>
-        <View>
-          <Text style={styles.categoryTitle}>Bankverbindung</Text>
-          <Text>Banque de France</Text>
-          <Text>IBAN: DE88 1001 0123 7595 0200 99</Text>
-          <Text>BIC: QNTODEB2XXX</Text>
-          <Text></Text>
-        </View>
-        <View>
-          <Text style={styles.categoryTitle}>Steuernummer</Text>
-          <Text>240/152/79806</Text>
-          <Text>Finanzamt</Text>
-          <Text>Nürnberg-Süd</Text>
-          <Text>UST ID: DE330237679</Text>
+  const Angebot = () => (
+    <View>
+      <View style={styles.container}>
+        <Text style={styles.offerTitle}>Angebot "{project.titel}"</Text>
+        <View style={styles.container}>
+          <Text style={styles.text}>Dies ist ein unverbindliches Angebot. Die Preise können bis Abschluss des Projektes abweichen. Bei einer wesentlichen Kostenüberschreitung wird der Kunde unverzüglich in Kenntnis gesetzt.</Text>
         </View>
       </View>
+      <View style={{ marginTop: 20 }}>
+        <Text style={styles.categoryTitle}>Auftrag:</Text>
+        <Text style={styles.text}>{project.auftrag}</Text>
+      </View>
+    </View>
+  );
+
+  const Korrektur = () => {
+    return (
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.categoryTitle}>Korrekturen:</Text>
+          {project.anzahlKorrekturschleifen > 1 && (
+            <Text style={styles.text}>Im Angebot sind {project.anzahlKorrekturschleifen} Korrekturschleifen enthalten</Text>
+          )}
+          {project.anzahlKorrekturschleifen < 1 && (
+            <Text style={styles.text}>Im Angebot sind keine Korrekturschleifen enthalten.</Text>
+          )}
+          {project.anzahlKorrekturschleifen === 1 && (
+            <Text style={styles.text}>Im Angebot ist eine Korrekturschleife enthalten.</Text>
+          )}
+          <Text style={styles.text}>Darüberhinausgehende Korrekturen werden mit {project.preisKorrekturschleifen} € je Stunde berechnet.</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const Abgabe = () => (
+    <View style={styles.container}>
+      <Text style={styles.categoryTitle}>Abgabe:</Text>
+      <Text style={styles.text}>Die Lieferung der Daten erfolgt nach gemeinsamer Absprache.</Text>
+    </View>
+  );
+
+  const Zahlungsbedingungen = () => (
+    <View style={styles.container}>
+      <Text style={styles.categoryTitle}>Zahlungsbedingungen:</Text>
+      <View style={styles.row}>
+        <Text style={[styles.text, { width: '45%' }]}>Abschlusszahlung nach Lieferung der Daten:</Text>
+        <Text style={[styles.text, { width: '50%' }]}>{project.paymentOptions}</Text>
+      </View>
+    </View>
+  );
+
+  const Nutzungsrechte = () => (
+    <View style={styles.container}>
+      <Text style={styles.categoryTitle}>Nutzungsrechte:</Text>
+      <View style={styles.row}>
+        <Text style={[styles.text, styles.ul]}>Nutzungsart:</Text>
+        <Text style={[styles.text, styles.value]}>{project.usageTypes}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={[styles.text, styles.ul]}>Nutzungsdauer:</Text>
+        <Text style={[styles.text, styles.value]}>{project.usageDurations}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={[styles.text, styles.ul]}>Nutzungsumfang:</Text>
+        <Text style={[styles.text, styles.value]}>{project.usageScopes}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={[styles.text, styles.ul]}>Nutzungsgebiet:</Text>
+        <Text style={[styles.text, styles.value]}>{project.usageAreas}</Text>
+      </View>
+    </View>
+  );
+
+  const BaseText = () => (
+    <View style={styles.container} wrap={false}>
+      <Text style={[styles.text, styles.container]}>Diese Rechteeinräumung umfasst das Recht auf Weiterübertragung an Dritte nach Genehmigung des Auftragnehmers. Ausgeschlossen sind offene Arbeitsdateien.</Text>
+      <Text style={[styles.text, styles.container]}>Skizzen und Darstellungen zur Ansicht sind nicht Bestandteil der Lieferung und an ihnen werden keine Nutzungsrechte eingeräumt. Sie dienen nur der Abstimmung zwischen Auftragnehmer und Auftraggeber. Es wird keine Rechtsberatung geleistet und die technische Bereitstellung bringt keine rechtliche Gewährleistung mit sich. Die rechtliche Prüfung der Webseite obliegt dem Kunden.</Text>
+      <Text style={[styles.text, styles.container]}>Der Designer ist berechtigt, sämtliche in Erfüllung des Vertrages entstehenden Arbeiten zum Zwecke der Eigenwerbung in sämtlichen Medien unter namentlicher Nennung des Auftraggebers zu verwenden und im übrigen auf das Tätigwerden für den Auftraggeber hinzuweisen, sofern der Designer nicht über ein etwaiges entgegenstehendes Geheimhaltungsinteresse des Auftraggebers schriftlich in Kenntnis gesetzt wurde.</Text>
+      <Text style={[styles.text, styles.container]}>Die Übertragung der vorgenannten Nutzungsrechte erfolgt nach vollständiger Bezahlung der Rechnung.</Text>
+      <Text style={[styles.text]}>Es gelten die Allgemeinen Geschäftsbedingungen: <Link src='https://keingarten.com/agb/'>AGB</Link></Text>
+    </View>
   );
 
   const BaseText2 = () => (
     <View style={styles.container} wrap={false}>
-      <Text style={[styles.text, styles.container]}>Vielen Dank für die Zusammenarbeit und das damit verbundene Vertrauen!</Text>
-      <Text style={[styles.text]}>Zahlbar innerhalb von 10 Tagen ab Rechnungsstellung an unten genanntes Konto.</Text>
-      <Text style={[styles.text, { marginTop: 20 }]}>Beste Grüße</Text>
+      <Text style={[styles.text, styles.container]}>Dies ist ein unverbindliches Angebot. Der Preis kann bis Abschluss des Projektes abweichen. Bei einer wesentlichen Kostenüberschreitung wird der Kunde unverzüglich in Kenntnis gesetzt.</Text>
+      <Text style={[styles.text, { marginTop: 20 }]}>Wir würden uns sehr freuen das Projekt gemeinsam zu realisieren!</Text>
+      <Text style={[styles.text]}>Für Rückfragen stehen wir gerne jederzeit zur Verfügung.</Text>
+      <Text style={[styles.text, styles.container]}>Beste Grüße</Text>
       <Text style={[styles.text]}>keingarten</Text>
       <Image style={styles.signatureLogo} src={signature} />
+    </View>
+  );
+
+  const Signature = () => (
+    <View style={[styles.pageBottom, styles.container]}>
+      <Text style={[styles.categoryTitle, styles.container]}>Einverständnis der Allgemeinen Geschäftsbedingungen</Text>
+      <View style={styles.label}>
+        <View>
+          <Svg height="50" width="500">
+            <Line
+              x1={10} y1={50}
+              x2={200} y2={50}
+              stroke="black"
+              strokeWidth={1}
+            />
+          </Svg>
+          <Text style={styles.signatureText}>Ort, Datum</Text>
+        </View>
+        <View>
+          <Svg height="50" width="500">
+            <Line
+              x1={10} y1={50}
+              x2={200} y2={50}
+              stroke="black"
+              strokeWidth={1}
+            />
+          </Svg>
+          <Text style={styles.signatureText}>Unterschrift Auftraggeber</Text>
+        </View>
+      </View>
     </View>
   );
 
@@ -421,7 +485,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
       </View>
       <View style={[styles.theader, styles.rightAligned]}>
         <Text>
-          {subtotal.toLocaleString('de-DE', { minimumFractionDigits: 2 , currency: 'EUR'})} €
+          {subtotal.toLocaleString('de-DE', { minimumFractionDigits: 2 })} €
         </Text>
       </View>
     </View>
@@ -452,8 +516,8 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
           </Text>
         </View>
         :
-        <View style={[styles.theader, {textAlign: 'right'}]}>
-          <Text style={{textAlign: 'right'}}>
+        <View style={[styles.theader, styles.rightAligned]}>
+          <Text>
             {tax.toLocaleString('de-DE', { minimumFractionDigits: 2 })} €
           </Text>
         </View>
@@ -517,18 +581,32 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
       </Svg>
     </View>
   );
-  const PageBottom = () => (
-    <View>
-    <View fixed>
-      <Footer />
-    </View>
-    <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
-      `Seite ${pageNumber} von ${totalPages}`
-    )} fixed />
+  const OptionalText = () => (
+    <View style={{ marginTop: 20 }}>
+      <Text style={styles.categoryTitle}>Optionaler Text</Text>
+      <Text style={[styles.text, styles.container]}>{project.optionalText}</Text>
     </View>
   );
+
   return (
     <Document>
+      <Page size="A4" style={styles.page}>
+        <View fixed>
+          <Header />
+        </View>
+        <View >
+          <Angebot />
+          <Korrektur />
+          <Abgabe />
+          <Zahlungsbedingungen />
+          <Nutzungsrechte />
+          <BaseText />
+          <Signature />
+        </View>
+        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
+          `Seite ${pageNumber} von ${totalPages}`
+        )} fixed />
+      </Page>
       <Page size="A4" style={styles.page}>
         <View fixed>
           <Header />
@@ -541,15 +619,25 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
           <TableTotal />
           <BaseText2 />
         </View>
-      	<View style={styles.footerPosition} fixed>
-      		<Footer />
-        </View>
         <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
           `Seite ${pageNumber} von ${totalPages}`
         )} fixed />
       </Page>
+      {project.optionalText !== "" ? (
+        <Page size="A4" style={styles.page}>
+          <View fixed>
+            <Header />
+            <Address />
+            <SubHeader />
+          </View>
+          <OptionalText />
+          <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
+            `Seite ${pageNumber} von ${totalPages}`
+          )} fixed />
+        </Page>
+      ) : null}
     </Document>
   );
 };
 
-export default Invoice;
+export default Quotation;

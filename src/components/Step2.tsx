@@ -11,20 +11,18 @@ const usageTypes = [
 ];
 
 const usageDurations = [
-    { value: '1jahr', label: '1 Jahr' },
-    { value: '2jahre', label: '2 Jahre' },
+    { value: '1 Jahr', label: '1 Jahr' },
+    { value: '2 Jahre', label: '2 Jahre' },
     { value: 'unbegrenzt', label: 'Unbegrenzt' }
 ];
 
 const usageScopes = [
     { value: 'umfangreich', label: 'Umfangreich (keine Eingeschränkungen)' },
-    { value: 'Eingeschränkt', label: 'Eingeschränkt' }
+    { value: 'eingeschränkt', label: 'Eingeschränkt' }
 ];
 
 const usageAreas = [
     { value: 'europa', label: 'Europa' },
-    { value: 'usa', label: 'USA' },
-    { value: 'asien', label: 'Asien' },
     { value: 'global', label: 'Global' }
 ];
 

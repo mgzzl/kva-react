@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import ReactPDF, { PDFViewer, PDFDownloadLink, pdf } from '@react-pdf/renderer';
-import Invoice from './Invoice';
+import{ pdf } from '@react-pdf/renderer';
+import Quotation from './Quotation';
+import QuotationEnglish from './QuotationEnglish';
 import { saveAs } from 'file-saver';
+import Invoice from './Invoice';
+import InvoiceEnglish from './InvoiceEnglish';
 
 
 interface TabProps {
@@ -16,12 +19,9 @@ interface TabsProps {
 const Tabs: React.FC<TabsProps> = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [tabValues, setTabValues] = useState(new Map<number, any>());
-  const [inputErrors, setInputErrors] = useState({});
-  const [showPDF, setShowPDF] = useState(false);
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
-    // setTabValues((prevValues) => prevValues.set(index, { ...prevValues.get(index), }));
   };
 
   const handleNext = () => {
@@ -38,14 +38,6 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
 
   const handleFormChange = (index: number, values: any) => {
     setTabValues(prevValues => new Map(prevValues).set(index, values));
-  };
-
-  const handlePrintValues = () => {
-    const allValues = Array.from(tabValues.entries()).reduce<Record<number, any>>((acc, [index, values]) => {
-      acc[index] = values;
-      return acc;
-    }, {});
-    console.log(allValues);
   };
 
   const isFormValid = async (): Promise<boolean> => {
@@ -85,17 +77,37 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
       return acc;
     }, {});
     console.log("All Values: ", allValues)
-    const invoiceData = {
+    const QuotationData = {
       customer: allValues[0]?.customer || {},
       keingarten: allValues[0]?.keingarten || {},
       project: allValues[1] || {},
       items: allValues[2] || []
     };
 
-    const taxRate = 19;  // Example tax rate
-    const doc = <Invoice data={invoiceData} taxRate={taxRate} />;
+    const customerEnglish = QuotationData.customer.english
+    const customerReverseCharge = QuotationData.customer.reverseCharge
+    const invoiceNr = QuotationData.keingarten.invoiceNr
+
+    const taxRate = customerReverseCharge ? 0 : 19;  // if reverse charge true tax rate is 0 else 19
+    const doc = customerEnglish 
+    ? <QuotationEnglish data={QuotationData} taxRate={taxRate} /> 
+    : <Quotation data={QuotationData} taxRate={taxRate} />;    
     const blob = await pdf(doc).toBlob();
-    saveAs(blob, 'invoice.pdf');
+    const keingartenDate = QuotationData.keingarten.date.replace(/-/g, ''); // Remove dashes from date
+    const customerName = QuotationData.customer.name.replace(/\s+/g, ''); // Remove spaces from customer name
+    const projectTitle = QuotationData.project.titel.replace(/\s+/g, ''); // Remove spaces from project title
+  
+    const pdfPath = customerEnglish ? `${keingartenDate}-Quotation-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-KVA-${customerName}-${projectTitle}-keingarten.pdf`;  
+    saveAs(blob, pdfPath);
+
+    if (invoiceNr !== ''){
+      const docInvoice = customerEnglish 
+      ? <InvoiceEnglish data={QuotationData} taxRate={taxRate} /> 
+      : <Invoice data={QuotationData} taxRate={taxRate} />; 
+      const blobInvoice = await pdf(docInvoice).toBlob();
+      const pdfPathInvoice = customerEnglish ? `${keingartenDate}-Invoice-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-Rechnung-${customerName}-${projectTitle}-keingarten.pdf`;  
+      saveAs(blobInvoice, pdfPathInvoice);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,19 +117,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
     // Custom Bootstrap validation
 
     if (await isFormValid()) {
-      handlePrintValues();
-      setShowPDF(true);
       handleDownload();
-      // const currentForm = document.querySelector<HTMLFormElement>(`.needs-validation`);
-      // if (currentForm){
-      //   currentForm.querySelectorAll('.form-control, .form-select').forEach((input) => {
-      //     if ((input as HTMLInputElement).value === '' || (input as HTMLInputElement).value === 'Bitte wählen') {
-      //       input.classList.add('is-invalid');
-      //     } else {
-      //       input.classList.remove('is-invalid');
-      //     }
-      //   });
-      // }
     } else {
       // Trigger Bootstrap invalid feedback
       document.querySelectorAll('.form-control, .form-select').forEach((input) => {
@@ -129,17 +129,6 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
       });
     }
   };
-
-  const allValues = Array.from(tabValues.entries()).reduce<Record<number, any>>((acc, [index, values]) => {
-    acc[index] = values;
-    return acc;
-  }, {});
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   handlePrintValues();
-  //   // Further logic for submission or PDF generation
-  // };
 
   return (
     <div>
