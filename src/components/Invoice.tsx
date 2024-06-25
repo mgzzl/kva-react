@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import ReactPDF, { Document, Page, Text, View, StyleSheet, Font, Image, Line, Svg, Link } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image, Line, Svg } from '@react-pdf/renderer';
 import logo from '../kg_logo_black_192px.png'
 import signature from '../kg_signe.png'
 import OpenSansRegular from '../assets/fonts/OpenSans-Regular.ttf'
@@ -59,10 +59,6 @@ const styles = StyleSheet.create({
   tbody2: {
     flex: 2
   },
-  offerTitle: {
-    fontSize: 15,
-    fontWeight: 'bold'
-  },
   categoryTitle: {
     fontWeight: 'bold'
   },
@@ -78,13 +74,6 @@ const styles = StyleSheet.create({
   signatureLogo: {
     marginTop: '6.5mm',
     width: 30
-  },
-  pageBottom: {
-    position: 'relative',
-    left: 0,
-    bottom: 0,
-    right: 0,
-    lineHeight: 1.25,
   },
   centered: {
     alignItems: 'center',
@@ -515,16 +504,6 @@ const Invoice: React.FC<InvoiceProps> = ({ data, taxRate }) => {
           strokeWidth={1}
         />
       </Svg>
-    </View>
-  );
-  const PageBottom = () => (
-    <View>
-    <View fixed>
-      <Footer />
-    </View>
-    <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
-      `Seite ${pageNumber} von ${totalPages}`
-    )} fixed />
     </View>
   );
   return (

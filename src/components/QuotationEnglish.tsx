@@ -5,7 +5,6 @@ import logo from '../kg_logo_black_192px.png'
 import signature from '../kg_signe.png'
 import OpenSansRegular from '../assets/fonts/OpenSans-Regular.ttf'
 import OpenSansBold from '../assets/fonts/OpenSans-Bold.ttf'
-import Acumin from '../assets/fonts/Acumin_Variable_Concept.ttf'
 
 
 // Register fonts
