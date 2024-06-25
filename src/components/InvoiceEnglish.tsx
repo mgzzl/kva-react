@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Image, Line, Svg } from '@react-pdf/renderer';
-import logo from '../kg_logo_black_192px.png'
+import logo from '../kg_logo.png'
 import signature from '../kg_signe.png'
 import OpenSansRegular from '../assets/fonts/OpenSans-Regular.ttf'
 import OpenSansBold from '../assets/fonts/OpenSans-Bold.ttf'

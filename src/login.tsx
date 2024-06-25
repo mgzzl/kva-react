@@ -10,7 +10,7 @@ function Login() {
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Add your login logic here
-        if (username === 'kg-kva' && password === 'Rolex420!') {
+        if (username === 'kg-kva' && password === 'KVA-Generator!') {
             setIsLoggedIn(true);
             return <Navigate to="/" replace={true} />;
         } else {
@@ -28,7 +28,9 @@ function Login() {
             </Router>
             ) : (
                 <>
-                    <h1>Login</h1>
+                    <div className='mx-auto'>
+                        <h1>Login</h1>
+                    </div>
                     <form onSubmit={handleLogin}>
                         <div className="form-group row">
                             <label className="col-sm-2 col-form-label">Username</label>
