@@ -125,7 +125,7 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
         <div className="container mt-5">
             <form className="needs-validation" noValidate>
                 <div className="row">
-                    <div className="col-5">
+                    <div className="col">
                         <div className="mb-3">
                             <h4 className="mb-3">Kunde</h4>
                             <label className="form-label">
