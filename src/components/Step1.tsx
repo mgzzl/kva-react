@@ -246,18 +246,6 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            {/* <div className="d-flex align-items-center">
-                            </div>
-                                <label className="form-label mt-3">
-                                Reverse Charge:</label>
-                                <input 
-                                    type="checkbox" 
-                                    className="form-check-input" 
-                                    name="customer.reverseCharge" 
-                                    checked={formData.customer.reverseCharge}
-                                    onChange={handleChange}  
-                                />
-                                    reverse charge */}
                         </div>
                     </div>
                     <div className="vr"></div>
