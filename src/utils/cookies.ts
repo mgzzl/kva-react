@@ -25,7 +25,7 @@ export function setInputCookie(name: string, value: string) {
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
   }
   
-  export function getInputCookie(name: string): string | null {
+export function getInputCookie(name: string): string | null {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
