@@ -127,6 +127,7 @@ interface QuotationProps {
   data: {
     customer: {
       name: string;
+      secname: string;
       street: string;
       streetNumber: string;
       zip: string;
@@ -232,7 +233,7 @@ const Quotation: React.FC<QuotationProps> = ({ data, taxRate }) => {
         <Text style={styles.categoryTitle}>keingarten</Text>
       </View>
       <View style={styles.label}>
-        <Text></Text>
+        <Text>{customer.secname}</Text>
         <Text>Bissantz, Lörinc, Lorenz, Brozmann GbR</Text>
       </View>
       <View style={styles.label}>

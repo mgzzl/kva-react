@@ -10,6 +10,7 @@ const contactPersons = [
 interface FormData {
     customer: {
         name: string;
+        secname: string;
         street: string;
         streetNumber: string;
         zip: string;
@@ -40,6 +41,7 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
         values || {
             customer: {
                 name: '',
+                secname: '',
                 street: '',
                 streetNumber: '',
                 zip: '',
@@ -132,10 +134,26 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 type="text"
                                 value={formData.customer.name}
                                 className="form-control"
-                                placeholder="Musterfirma GmbH"
+                                placeholder="Musterfirma"
                                 name="customer.name"
                                 onChange={handleChange}
                                 required
+                            />
+
+                            <div className="invalid-feedback">
+                                Bitte geben Sie den Firmennamen ein.
+                            </div>
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">
+                                Firmenname (rechtlich):</label>
+                            <input
+                                type="text"
+                                value={formData.customer.secname}
+                                className="form-control"
+                                placeholder="Musterfirma GbR"
+                                name="customer.secname"
+                                onChange={handleChange}
                             />
 
                             <div className="invalid-feedback">

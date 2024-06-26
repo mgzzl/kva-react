@@ -137,6 +137,7 @@ interface InvoiceProps {
   data: {
     customer: {
       name: string;
+      secname: string;
       street: string;
       streetNumber: string;
       zip: string;
