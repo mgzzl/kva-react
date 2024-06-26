@@ -19,3 +19,20 @@ export function getCookie(name: string) {
 export function eraseCookie(name: string) {
     document.cookie = `${name}=; Max-Age=-99999999;`;
 }
+
+export function setInputCookie(name: string, value: string) {
+    const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // Two hours from now
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+  }
+  
+  export function getInputCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        const result = parts.pop()?.split(';').shift();
+        console.log(result)
+        return result !== undefined ? result : null;
+    }
+    return null;
+}
+  
