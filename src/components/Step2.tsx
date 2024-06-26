@@ -13,17 +13,17 @@ const usageTypes = [
 const usageDurations = [
     { value: '1 Jahr', label: '1 Jahr' },
     { value: '2 Jahre', label: '2 Jahre' },
-    { value: 'unbegrenzt', label: 'Unbegrenzt' }
+    { value: 'Unbegrenzt', label: 'Unbegrenzt' }
 ];
 
 const usageScopes = [
-    { value: 'umfangreich', label: 'Umfangreich (keine Eingeschränkungen)' },
-    { value: 'eingeschränkt', label: 'Eingeschränkt' }
+    { value: 'Umfangreich', label: 'Umfangreich (keine Eingeschränkungen)' },
+    { value: 'Eingeschränkt', label: 'Eingeschränkt' }
 ];
 
 const usageAreas = [
-    { value: 'europa', label: 'Europa' },
-    { value: 'global', label: 'Global' }
+    { value: 'Europa', label: 'Europa' },
+    { value: 'Global', label: 'Global' }
 ];
 
 
@@ -55,9 +55,9 @@ interface Step2Props {
         preisKorrekturschleifen: 140,
         paymentOptions: 'Gesamtsumme',
         usageTypes: 'Eingeschränkte Ausschließlichkeit',
-        usageDurations: 'unbegrenzt',
-        usageScopes: 'umfangreich',
-        usageAreas: 'global'
+        usageDurations: 'Unbegrenzt',
+        usageScopes: 'Umfangreich',
+        usageAreas: 'Global'
     });
 
     useEffect(() => {

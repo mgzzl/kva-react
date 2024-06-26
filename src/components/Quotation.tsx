@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
   page: {
     fontFamily: 'OpenSans',
     fontSize: 10,
-    paddingVertical: '13mm',
+    // paddingVertical: '13mm',
+    paddingTop: '8mm',
+    paddingBottom: '15mm',
     paddingHorizontal: '15.5mm',
     lineHeight: 1.25,
     flexDirection: 'column'
@@ -40,10 +42,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   container: {
-    marginTop: 10
+    paddingTop: 10
   },
   logo: {
-    width: 120
+    width: 100,
+    paddingBottom: '3mm'
   },
   address: {
     lineHeight: 1.5
@@ -272,7 +275,7 @@ const Quotation: React.FC<QuotationProps> = ({ data, taxRate }) => {
         <View>
           <Text style={styles.categoryTitle}>Korrekturen:</Text>
           {project.anzahlKorrekturschleifen > 1 && (
-            <Text style={styles.text}>Im Angebot sind {project.anzahlKorrekturschleifen} Korrekturschleifen enthalten</Text>
+            <Text style={styles.text}>Im Angebot sind {project.anzahlKorrekturschleifen} Korrekturschleifen enthalten.</Text>
           )}
           {project.anzahlKorrekturschleifen < 1 && (
             <Text style={styles.text}>Im Angebot sind keine Korrekturschleifen enthalten.</Text>
