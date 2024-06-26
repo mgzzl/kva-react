@@ -57,7 +57,7 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                 zip: '90443',
                 city: 'Nürnberg',
                 country: 'Deutschland',
-                invoiceNr: ''
+                invoiceNr: null
             }
         }
     );
@@ -381,22 +381,23 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 Bitte geben Sie das Land ein.
                             </div>
                         </div>
-                        <h6 className="mb-3">Rechnung?</h6>
-                        <label className="form-label">
-                        Rechnungsnummer:</label>
-                        <input 
+                        <div>
+                            <h6 className='mb-3'>Rechnung?</h6>
+                            <label htmlFor="invoiceNr" className="form-label">Rechnungsnummer:</label>
+                            <input 
                             type="number" 
+                            id="invoiceNr"
                             className="form-control" 
                             name="keingarten.invoiceNr"
                             placeholder='123'
                             value={formData.keingarten.invoiceNr} 
                             onChange={handleChange}
-                        />
+                            aria-describedby="invoiceHelp"
+                            />
+                            <small id="invoiceHelp" className="form-text text-muted">Füge eine Rechnungsnummer hinzu, falls eine Rechnung benötigt wird.</small>
+                        </div>
                     </div>
                 </div>
-                {/* <button className="btn btn-success" onClick={handleSubmit}>
-                PDF generieren
-              </button> */}
             </form>
         </div>
     );

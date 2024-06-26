@@ -74,7 +74,7 @@ interface Step2Props {
 
     return (
         <div className="container mt-5">
-            <form method="POST" action="/" className="needs-validation" noValidate>
+            <form className="needs-validation" noValidate>
             <div className="mt-5 mb-3">
                 <h4 className="mb-3">Angebot</h4>
                 <label htmlFor="titel" className="form-label">Titel:</label>
@@ -116,10 +116,12 @@ interface Step2Props {
                     placeholder="Optionaler Text.."
                     value={formData.optionalText}
                     onChange={handleChange} 
+                    aria-describedby="optionalTextHelp"
                 ></textarea>
-                <div className="invalid-feedback">
+                {/* <div className="invalid-feedback">
                     Bitte geben Sie einen optionalen Text ein, falls nötig.
-                </div>
+                </div> */}
+                <small id="optionalTextHelp" className="form-text text-muted">Füge einen optionalen Text hinzu, falls nötig.</small>
             </div>
             <hr />
             <h6 className="mb-3">Korrektur</h6>

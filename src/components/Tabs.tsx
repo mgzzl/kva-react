@@ -100,7 +100,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
     const pdfPath = customerEnglish ? `${keingartenDate}-Quotation-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-KVA-${customerName}-${projectTitle}-keingarten.pdf`;  
     saveAs(blob, pdfPath);
 
-    if (invoiceNr !== ''){
+    if (invoiceNr !== null){
       const docInvoice = customerEnglish 
       ? <InvoiceEnglish data={QuotationData} taxRate={taxRate} /> 
       : <Invoice data={QuotationData} taxRate={taxRate} />; 
