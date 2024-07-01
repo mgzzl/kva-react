@@ -87,9 +87,9 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
         cookieNames.forEach(cookieName => {
             // console.log('Cookie name:', cookieName)
             if (cookieName.startsWith('item_')) {
-                console.log('Cookie found:', cookieName)
+                // console.log('Cookie found:', cookieName)
                 const itemId = parseInt(cookieName.substring(5));
-                console.log('item id', itemId)
+                // console.log('item id', itemId)
                 const cookieValue = getInputCookie(`item_${itemId}`);
                 console.log(cookieValue)
                 if (cookieValue) {

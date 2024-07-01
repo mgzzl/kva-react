@@ -63,7 +63,7 @@ interface Step2Props {
 
     useEffect(() => {
         onChange(formData);
-        console.log(formData)
+        // console.log(formData)
         Object.entries(formData).forEach(([key, value]) => {
             setInputCookie(`${key}`, value.toString());
         });
