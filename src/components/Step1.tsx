@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getInputCookie, setInputCookie } from '../utils/cookies';
 
 const contactPersons = [
     { value: 'Johannes Bissantz', label: 'Johannes Bissantz' },
@@ -27,7 +28,7 @@ interface FormData {
         zip: string;
         city: string;
         country: string;
-        invoiceNr: number;
+        invoiceNr: number | null;
     };
 }
 
@@ -36,36 +37,46 @@ interface Step1Props {
     onChange: (value: FormData) => void;
 }
 
+const savedFormData = {
+    customer: {
+        name: getInputCookie('customer.name') || '',
+        secname: getInputCookie('customer.secname') || '',
+        street: getInputCookie('customer.street') || '',
+        streetNumber: getInputCookie('customer.streetNumber') || '',
+        zip: getInputCookie('customer.zip') || '',
+        city: getInputCookie('customer.city') || '',
+        country: getInputCookie('customer.country') || '',
+        reverseCharge: getInputCookie('customer.reverseCharge') === 'true',
+        english: getInputCookie('customer.english') === 'true'
+    },
+    keingarten: {
+        contactPerson: getInputCookie('keingarten.contactPerson') || '',
+        date: getInputCookie('keingarten.date') || new Date().toISOString().split('T')[0],
+        street: getInputCookie('keingarten.street') || 'Schreyerstraße',
+        streetNumber: getInputCookie('keingarten.streetNumber') || '21',
+        zip: getInputCookie('keingarten.zip') || '90443',
+        city: getInputCookie('keingarten.city') || 'Nürnberg',
+        country: getInputCookie('keingarten.country') || 'Deutschland',
+        invoiceNr: parseInt(getInputCookie('keingarten.invoiceNr') || '0', 10) || null
+    }
+};
+
 const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
     const [formData, setFormData] = useState<FormData>(
-        values || {
-            customer: {
-                name: '',
-                secname: '',
-                street: '',
-                streetNumber: '',
-                zip: '',
-                city: '',
-                country: '',
-                reverseCharge: false,
-                english: false
-            },
-            keingarten: {
-                contactPerson: '',
-                date: new Date().toISOString().split('T')[0],
-                // date: new Date().toLocaleDateString('de'),
-                street: 'Schreyerstraße',
-                streetNumber: '21',
-                zip: '90443',
-                city: 'Nürnberg',
-                country: 'Deutschland',
-                invoiceNr: null
-            }
-        }
+        values || savedFormData
     );
 
     useEffect(() => {
         onChange(formData);
+        // console.log(formData)
+        // console.log(formData.customer)
+        Object.entries(formData.customer).forEach(([key, value]) => {
+            setInputCookie(`customer.${key}`, value.toString());
+        });
+        // console.log(formData.keingarten)
+        Object.entries(formData.keingarten).forEach(([key, value]) => {
+            setInputCookie(`keingarten.${key}`, value?.toString() || '');
+        });
     }, [formData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -104,11 +115,12 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                 }));
             } else if (name.startsWith('keingarten.')) {
                 const field = name.split('.')[1];
+                const parsedValue = field === 'invoiceNr' ? (value === '' ? null : parseInt(value)) : value;
                 setFormData(prevState => ({
                     ...prevState,
                     keingarten: {
                         ...prevState.keingarten,
-                        [field]: value
+                        [field]: parsedValue
                     }
                 }));
             }
@@ -396,7 +408,7 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                             className="form-control" 
                             name="keingarten.invoiceNr"
                             placeholder='123'
-                            value={formData.keingarten.invoiceNr} 
+                            value={formData.keingarten.invoiceNr ?? ''}
                             onChange={handleChange}
                             aria-describedby="invoiceHelp"
                             />

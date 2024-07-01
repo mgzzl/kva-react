@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getInputCookie, setInputCookie } from '../utils/cookies';
 
 const paymentOptions = [
     { value: 'Teilzahlung', label: 'Mit Anzahlung (25%)' },
@@ -48,20 +49,24 @@ interface Step2Props {
   const Step2: React.FC<Step2Props> = ({ values, onChange }) => {
     const [formData, setFormData] = useState<FormData>(
     values || {
-        titel: '',
-        auftrag: '',
-        optionalText: '',
-        anzahlKorrekturschleifen: 1,
-        preisKorrekturschleifen: 140,
-        paymentOptions: 'Gesamtsumme',
-        usageTypes: 'Eingeschränkte Ausschließlichkeit',
-        usageDurations: 'Unbegrenzt',
-        usageScopes: 'Umfangreich',
-        usageAreas: 'Global'
+        titel: getInputCookie('titel') || '',
+        auftrag:  getInputCookie('auftrag') || '',
+        optionalText:  getInputCookie('optionalText') || '',
+        anzahlKorrekturschleifen: getInputCookie('anzahlKorrekturschleifen') || 1,
+        preisKorrekturschleifen: getInputCookie('preisKorrekturschleifen') || 140,
+        paymentOptions:  getInputCookie('paymentOptions') || 'Gesamtsumme',
+        usageTypes:  getInputCookie('usageTypes') || 'Eingeschränkte Ausschließlichkeit',
+        usageDurations:  getInputCookie('usageDurations') || 'Unbegrenzt',
+        usageScopes:  getInputCookie('usageScopes') || 'Umfangreich',
+        usageAreas:  getInputCookie('usageAreas') || 'Global'
     });
 
     useEffect(() => {
         onChange(formData);
+        console.log(formData)
+        Object.entries(formData).forEach(([key, value]) => {
+            setInputCookie(`${key}`, value.toString());
+        });
       }, [formData]);
     
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

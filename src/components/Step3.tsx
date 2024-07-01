@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getInputCookie, setInputCookie } from '../utils/cookies';
+
 
 const options = {
     "Bitte wählen": [],
@@ -79,25 +81,57 @@ interface Step3Props {
 }
 
 const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
-    const [items, setItems] = useState<Item[]>(values || [{ id: 1, position: 'Bitte wählen', subItems: []}]);
+    const getInitialItemsFromCookie = (): Item[] => {
+        const cookieItems: Item[] = [];
+        const cookieNames = document.cookie.split(';').map(cookie => cookie.trim());
+        cookieNames.forEach(cookieName => {
+            // console.log('Cookie name:', cookieName)
+            if (cookieName.startsWith('item_')) {
+                console.log('Cookie found:', cookieName)
+                const itemId = parseInt(cookieName.substring(5));
+                console.log('item id', itemId)
+                const cookieValue = getInputCookie(`item_${itemId}`);
+                console.log(cookieValue)
+                if (cookieValue) {
+                    try {
+                        const parsedItem = JSON.parse(cookieValue);
+                        cookieItems.push(parsedItem);
+                    } catch (error) {
+                        console.error(`Error parsing cookie for item_${itemId}:`, error);
+                    }
+                }
+            }
+        });
+        return cookieItems;
+    };
+    // const [items, setItems] = useState<Item[]>(values || [{ id: 1, position: 'Bitte wählen', subItems: []}]);
+    const [items, setItems] = useState<Item[]>(() => {
+        const initialItems = getInitialItemsFromCookie(); // Function to retrieve initial items from cookie
+        return initialItems.length > 0 ? initialItems : values || [{ id: 1, position: 'Bitte wählen', subItems: [] }];
+    })
     const [subTotal, setSubTotal] = useState(0);
 
     useEffect(() => {
         onChange(items);
         updateSubTotal(items);
+        console.log(items);
+        items.forEach(item => {
+            setInputCookie(`item_${item.id}`, JSON.stringify(item));
+            console.log(`item_${item.id}`, JSON.stringify(item));
+        });
     }, [items]);
+
+
 
     const handleAddItem = () => {
         setItems([...items, { id: items.length + 1, position: 'Bitte wählen', subItems: []}]);
       };
 
-    const handleDeleteLastItem = () => {
-        if (items.length > 1) {
-            const newItems = items.slice(0, -1);
-            setItems(newItems);
-            updateSubTotal(newItems);
-        }
+      const handleDeleteAllItems = () => {
+        setItems([]);
+        updateSubTotal([]);
     };
+    
 
     const handleDeleteItem = (id: number) => {
         const newItems = items.filter(item => item.id !== id);
@@ -261,7 +295,7 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
                 </div>
                 <div className="d-grid gap-2">
                     <button className="btn btn-primary" type="button" onClick={handleAddItem}>Position hinzufügen</button>
-                    <button className="btn btn-danger" type="button" onClick={handleDeleteLastItem}>Letzte Position löschen</button>
+                    <button className="btn btn-danger" type="button" onClick={handleDeleteAllItems}>Alle Positionen löschen</button>
                 </div>
             </form>
         </div>

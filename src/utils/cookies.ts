@@ -23,6 +23,7 @@ export function eraseCookie(name: string) {
 export function setInputCookie(name: string, value: string) {
     const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // Two hours from now
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+    // console.log(document.cookie)
   }
   
 export function getInputCookie(name: string): string | null {
@@ -30,7 +31,7 @@ export function getInputCookie(name: string): string | null {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
         const result = parts.pop()?.split(';').shift();
-        console.log(result)
+        // console.log(result)
         return result !== undefined ? result : null;
     }
     return null;
