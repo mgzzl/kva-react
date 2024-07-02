@@ -13,7 +13,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ show, handleClose, message }) =
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Login Error</h5>
+                        <h5 className="modal-title">Error</h5>
                     </div>
                     <div className="modal-body">
                         <p>{message}</p>
