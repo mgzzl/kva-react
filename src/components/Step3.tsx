@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getInputCookie, setInputCookie } from '../utils/cookies';
+import { eraseCookie, getInputCookie, setInputCookie } from '../utils/cookies';
 
 
 const options = {
@@ -84,14 +84,11 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
     const getInitialItemsFromCookie = (): Item[] => {
         const cookieItems: Item[] = [];
         const cookieNames = document.cookie.split(';').map(cookie => cookie.trim());
+    
         cookieNames.forEach(cookieName => {
-            // console.log('Cookie name:', cookieName)
             if (cookieName.startsWith('item_')) {
-                // console.log('Cookie found:', cookieName)
                 const itemId = parseInt(cookieName.substring(5));
-                // console.log('item id', itemId)
                 const cookieValue = getInputCookie(`item_${itemId}`);
-                console.log(cookieValue)
                 if (cookieValue) {
                     try {
                         const parsedItem = JSON.parse(cookieValue);
@@ -102,8 +99,12 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
                 }
             }
         });
+    
+        // Sort items by their ID in ascending order
+        cookieItems.sort((a, b) => a.id - b.id);
+    
         return cookieItems;
-    };
+    };    
     // const [items, setItems] = useState<Item[]>(values || [{ id: 1, position: 'Bitte wählen', subItems: []}]);
     const [items, setItems] = useState<Item[]>(() => {
         const initialItems = getInitialItemsFromCookie(); // Function to retrieve initial items from cookie
@@ -128,22 +129,28 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
       };
 
       const handleDeleteAllItems = () => {
+        items.forEach(item => eraseCookie(`item_${item.id}`));
         setItems([]);
         updateSubTotal([]);
     };
     
 
     const handleDeleteItem = (id: number) => {
-        const newItems = items.filter(item => item.id !== id);
-        setItems(updateItemIds(newItems));
-        updateSubTotal(newItems);
-    };
-
-    const updateItemIds = (items: Item[]) => {
-        return items.map((item, index) => ({
+        const newItems = items.filter(item => item.id !== id).map((item, index) => ({
             ...item,
             id: index + 1
         }));
+        
+        items.forEach(item => {
+            eraseCookie(`item_${item.id}`);
+        });
+
+        newItems.forEach(item => {
+            setInputCookie(`item_${item.id}`, JSON.stringify(item));
+        });
+
+        setItems(newItems);
+        updateSubTotal(newItems);
     };
 
     const handlePositionChange = (index: number, value: OptionsKeys) => {
