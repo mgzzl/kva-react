@@ -31,7 +31,6 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
-  "main": "main.ts",
   "scripts": {
     "start": "react-scripts start",
     "start:strato": "serve -p 8080 build",

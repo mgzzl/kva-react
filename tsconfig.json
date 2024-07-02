@@ -22,7 +22,6 @@
   },
   "include": [
     "src",
-    "public",
-    "main.ts"
+    "public"
   ]
 }
