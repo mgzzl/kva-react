@@ -5,6 +5,7 @@ import QuotationEnglish from './QuotationEnglish';
 import { saveAs } from 'file-saver';
 import Invoice from './Invoice';
 import InvoiceEnglish from './InvoiceEnglish';
+import ErrorModal from './ErrorModal';
 
 
 interface TabProps {
@@ -19,6 +20,7 @@ interface TabsProps {
 const Tabs: React.FC<TabsProps> = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [tabValues, setTabValues] = useState(new Map<number, any>());
+  const [showErrorModal, setShowErrorModal] = React.useState(false);
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
@@ -70,6 +72,9 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
     console.log('isFormValid finished');
     return true;
   };
+  const handleCloseError = () => {
+    setShowErrorModal(false);
+  };
 
   const handleDownload = async () => {
     const allValues = Array.from(tabValues.entries()).reduce<Record<number, any>>((acc, [index, values]) => {
@@ -94,19 +99,27 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
     : <Quotation data={QuotationData} taxRate={taxRate} />;    
     const blob = await pdf(doc).toBlob();
     const keingartenDate = QuotationData.keingarten.date.replace(/-/g, ''); // Remove dashes from date
+    console.log(keingartenDate)
     const customerName = QuotationData.customer.name.replace(/\s+/g, ''); // Remove spaces from customer name
-    const projectTitle = QuotationData.project.titel.replace(/\s+/g, ''); // Remove spaces from project title
-  
-    const pdfPath = customerEnglish ? `${keingartenDate}-Quotation-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-KVA-${customerName}-${projectTitle}-keingarten.pdf`;  
-    saveAs(blob, pdfPath);
+    console.log(customerName)
+    // const projectTitle = QuotationData.project.titel != undefined && QuotationData.project.titel.replace(/\s+/g, '');
+    // console.log(QuotationData.project.titel === undefined );
+    if (QuotationData.project.titel !== undefined ){
+      const projectTitle = QuotationData.project.titel.replace(/\s+/g, '') 
+      console.log(projectTitle)
+      const pdfPath = customerEnglish ? `${keingartenDate}-Quotation-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-KVA-${customerName}-${projectTitle}-keingarten.pdf`;  
+      saveAs(blob, pdfPath);
 
-    if (invoiceNr !== null){
-      const docInvoice = customerEnglish 
-      ? <InvoiceEnglish data={QuotationData} taxRate={taxRate} /> 
-      : <Invoice data={QuotationData} taxRate={taxRate} />; 
-      const blobInvoice = await pdf(docInvoice).toBlob();
-      const pdfPathInvoice = customerEnglish ? `${keingartenDate}-Invoice-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-Rechnung-${customerName}-${projectTitle}-keingarten.pdf`;  
-      saveAs(blobInvoice, pdfPathInvoice);
+      if (invoiceNr !== null){
+        const docInvoice = customerEnglish 
+        ? <InvoiceEnglish data={QuotationData} taxRate={taxRate} /> 
+        : <Invoice data={QuotationData} taxRate={taxRate} />; 
+        const blobInvoice = await pdf(docInvoice).toBlob();
+        const pdfPathInvoice = customerEnglish ? `${keingartenDate}-Invoice-${customerName}-${projectTitle}-keingarten.pdf` : `${keingartenDate}-Rechnung-${customerName}-${projectTitle}-keingarten.pdf`;  
+        saveAs(blobInvoice, pdfPathInvoice);
+      }
+    } else {
+      setShowErrorModal(true);
     }
   };
 
@@ -167,6 +180,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
           )}
         </div>
       </div>
+      <ErrorModal show={showErrorModal} handleClose={handleCloseError} message='Can not get title. Please go through all tabs once.' />; 
     </div>
   );
 };
