@@ -281,7 +281,7 @@ const Quotation: React.FC<QuotationProps> = ({ data, taxRate }) => {
           {project.anzahlKorrekturschleifen < 1 && (
             <Text style={styles.text}>Im Angebot sind keine Korrekturschleifen enthalten.</Text>
           )}
-          {project.anzahlKorrekturschleifen === 1 && (
+          {project.anzahlKorrekturschleifen == 1 && (
             <Text style={styles.text}>Im Angebot ist eine Korrekturschleife enthalten.</Text>
           )}
           <Text style={styles.text}>Darüberhinausgehende Korrekturen werden mit {project.preisKorrekturschleifen} € je Stunde berechnet.</Text>

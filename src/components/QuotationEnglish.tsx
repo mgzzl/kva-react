@@ -20,13 +20,13 @@ const translate = {
   "Teilzahlung": "partial payment",
   "Gesamtsumme": "total",
   "Eingeschränkte Ausschließlichkeit": 'limited exclusivity',
-  "unbegrenzt": "unlimited",
+  "Unbegrenzt": "unlimited",
   "1 Jahr": "1 Year",
   "2 Jahre": "2 Years",
-  "umfangreich": "non-exclusive",
-  "eingeschränkt": "exclusive",
-  "global": "global",
-  "europa": "europe"
+  "Umfangreich": "non-exclusive",
+  "Eingeschränkt": "exclusive",
+  "Global": "global",
+  "Europa": "europe"
 };
 type TranslateKeys = keyof typeof translate;
 
