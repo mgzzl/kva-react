@@ -54,6 +54,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
         if (typeof values[key] === 'object') {
           for (const subKey in values[key]) {
             console.log(`Checking value for subkey ${subKey}`);
+            if (subKey === 'secname') continue; // Skip validation for secname
             if (values[key][subKey] === '' || values[key][subKey] === 'Bitte wählen') {
               console.log(`Invalid value found at tab ${index}`);
               await setActiveTab(index);  // Ensure the tab is set before returning false
@@ -98,8 +99,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
     ? <QuotationEnglish data={QuotationData} taxRate={taxRate} /> 
     : <Quotation data={QuotationData} taxRate={taxRate} />;    
     const blob = await pdf(doc).toBlob();
-    const keingartenDate = QuotationData.keingarten.date.replace(/-/g, ''); // Remove dashes from date
-    console.log(keingartenDate)
+    const keingartenDate = QuotationData.keingarten.date.replace(/-/g, '').slice(2); // Remove dashes and take last 6 characters
+    console.log(keingartenDate);
     const customerName = QuotationData.customer.name.replace(/\s+/g, ''); // Remove spaces from customer name
     console.log(customerName)
     // const projectTitle = QuotationData.project.titel != undefined && QuotationData.project.titel.replace(/\s+/g, '');
@@ -138,6 +139,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
           input.classList.add('is-invalid');
         } else {
           input.classList.remove('is-invalid');
+          input.classList.add('is-valid');
         }
       });
     }
