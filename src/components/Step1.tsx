@@ -81,7 +81,7 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, type, value } = e.target;
-        
+
         if (type === 'checkbox') {
             const { checked } = e.target as HTMLInputElement;
             if (name.startsWith('customer.')) {
@@ -126,12 +126,6 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
             }
         }
     };
-    
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     console.log(formData)
-    // };
 
     return (
         <div className="container mt-5">
@@ -151,26 +145,23 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                                 onChange={handleChange}
                                 required
                             />
-
                             <div className="invalid-feedback">
                                 Bitte geben Sie den Firmennamen ein.
                             </div>
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">
-                                Firmenname (rechtlich):</label>
+                            <label htmlFor="secname" className="form-label">Firnemenname (rechtlich):</label>
                             <input
-                                type="text"
-                                value={formData.customer.secname}
+                                id="secname"
                                 className="form-control"
-                                placeholder="Musterfirma GbR"
                                 name="customer.secname"
+                                placeholder="Musterfirma GbR"
+                                value={formData.customer.secname}
                                 onChange={handleChange}
-                            />
-
-                            <div className="invalid-feedback">
-                                Bitte geben Sie den Firmennamen ein.
-                            </div>
+                                aria-describedby="fnameHelp"
+                                required={false}
+                            ></input>
+                            <small id="fnameHelp" className="form-text text-muted">Füge den rechtlichen Firmenname hinzu, falls nötig. (optional)</small>
                         </div>
                         <div className="mb-3">
                             <h6 className="mb-3">Firmenadresse</h6>
@@ -402,17 +393,17 @@ const Step1: React.FC<Step1Props> = ({ values, onChange }) => {
                         <div>
                             <h6 className='mb-3'>Rechnung?</h6>
                             <label htmlFor="invoiceNr" className="form-label">Rechnungsnummer:</label>
-                            <input 
-                            type="number" 
-                            id="invoiceNr"
-                            className="form-control" 
-                            name="keingarten.invoiceNr"
-                            placeholder='123'
-                            value={formData.keingarten.invoiceNr ?? ''}
-                            onChange={handleChange}
-                            aria-describedby="invoiceHelp"
+                            <input
+                                type="number"
+                                id="invoiceNr"
+                                className="form-control"
+                                name="keingarten.invoiceNr"
+                                placeholder='123'
+                                value={formData.keingarten.invoiceNr ?? ''}
+                                onChange={handleChange}
+                                aria-describedby="invoiceHelp"
                             />
-                            <small id="invoiceHelp" className="form-text text-muted">Füge eine Rechnungsnummer hinzu, falls eine Rechnung benötigt wird.</small>
+                            <small id="invoiceHelp" className="form-text text-muted">Füge eine Rechnungsnummer hinzu, falls eine Rechnung benötigt wird. (optional)</small>
                         </div>
                     </div>
                 </div>
