@@ -115,10 +115,10 @@ const Step3: React.FC<Step3Props> = ({ values, onChange }) => {
     useEffect(() => {
         onChange(items);
         updateSubTotal(items);
-        console.log(items);
+        // console.log(items);
         items.forEach(item => {
             setInputCookie(`item_${item.id}`, JSON.stringify(item));
-            console.log(`item_${item.id}`, JSON.stringify(item));
+            // console.log(`item_${item.id}`, JSON.stringify(item));
         });
     }, [items]);
 
