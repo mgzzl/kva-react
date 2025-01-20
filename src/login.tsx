@@ -7,6 +7,12 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ErrorModal from './components/ErrorModal';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const kva_username = process.env.KVA_USERNAME;
+const kva_password = process.env.KVA_PASSWORD;
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -25,7 +31,7 @@ function Login() {
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Add your login logic here
-        if (username === 'kg-kva' && password === 'KVA-Generator!') {
+        if (username === kva_username && password === kva_password) {
             setIsLoggedIn(true);
             setCookie('username', username, 1);  // Cookie expires in 1 day
         } else {
@@ -34,30 +40,6 @@ function Login() {
             console.log("Please provide a valid username and password");
         }
     };
-    // const port = 5000; // Specify your backend server port
-
-    // const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault(); // Prevent default form submission
-
-    //     // console.log(username, password)
-    //     // axios.post('/login', { username, password })
-    //     axios.post(`http://silverfear.keingarten.de/:${port}/login`, { username, password })
-    //         .then((response) => {
-    //             if (response.data.success) {
-    //                 setIsLoggedIn(true);
-    //                 setCookie('username', username, 1);  // Cookie expires in 1 day 
-    //                 // Login successful, proceed to the next step
-    //             } else {
-    //                 setErrorMessage('Please provide a valid username and password');
-    //                 setShowError(true);
-    //                 console.log("Please provide a valid username and password");
-    //                 // Login failed, display an error message
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
     const handleCloseError = () => {
         setShowError(false);
     };
